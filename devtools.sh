@@ -15,16 +15,24 @@ RED='\033[0;41;30m'
 # Add your desired programme modules
 
 InstallWireGuard(){
-# Install WireGuard-Tools
+# Install WireGuard-Tools & ScrCpy
 	sudo apt update
-	sudo apt install wireguard-tools 
+	sudo apt install wireguard-tools
+	sudo apt install scrcpy
 }
 
-Installscrcpy(){
-# Insatll ScrCpy
-	sudo apt update
-	sudo apt install scrcpy
-	
+GenKey(){
+# Generate a private key
+	sudo wg genkey
+
+}
+
+DMTcommit(){
+	cd ~/DevTools/
+	read -rp "Enter your commit message: " GitMessage
+    git add . && git commit -m " $GitMessage "
+    git push git@github.com:DroppedMeguts/DevTools.git
+    cd ..
 }
 
 # ================== Main Menu ====================
@@ -44,7 +52,7 @@ show_menus(){
 	echo " $Description "  
 	echo "-----------------------------------"
 	echo "0.  "
-	echo "1.  "
+	echo "1.  Generate Private Key"
 	echo "2.  "
 	echo "3.  "
 	echo "4.  "
@@ -54,10 +62,10 @@ show_menus(){
     echo "8.  "
     echo "9.  "
 	echo "10. Setup Wireguard and ScrCpy "
-	echo "99.  Quit				   Exit this Menu"
+	echo "Q.  Quit				   Exit this Menu"
 	echo " "
 	echo " $lastmessage " 
-	echo " " 
+	sudo wg
 }
 
 read_options(){
@@ -67,9 +75,9 @@ read_options(){
 	read -p "Enter the desired item number or command: " choice
 # Execute selected command modules	
 	case $choice in
-        0)   PrintUsername ;;
-		1)   DateTime ;;
-		2)   PrintUsername && DateTime ;;
+        0)    ;;
+		1)   GenKey ;;
+		2)    ;;
 		3)   ;;
 		4)   ;;
 		5)   ;;
@@ -77,9 +85,11 @@ read_options(){
 		7)   ;;
 		8)   ;;
         9)   ;;
-        10)  InstallWireGuard && Installscrcpy ;;
+        10)  InstallWireGuard ;;
 # Quit this menu
-        99) clear && echo " See you later $USER! " && exit 0;;
+        q|Q) clear && echo " See you later $USER! " && exit 0;;
+# Add, Commit and Push updates
+		ACP)  DMTcommit ;;
 # Capture non listed inputs and send to BASH.
 		*) echo -e "${RED} $choice is not a displayed option, trying BaSH.....${STD}" && echo -e "$choice" | /bin/bash
 	esac
