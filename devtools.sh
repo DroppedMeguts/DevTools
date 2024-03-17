@@ -15,15 +15,16 @@ RED='\033[0;41;30m'
 # Add your desired programme modules
 
 InstallWireGuard(){
-# Change text colour and prints the current user variable.
-	echo -e "${RED} Current user is: ${STD}" $USER
+# Install WireGuard-Tools
+	sudo apt update
+	sudo apt install wireguard-tools 
 }
 
 Installscrcpy(){
-# create a variable which defines and executes the desired command (date).
-	DT=$(date)
-# Change text colour and display contents of the DT variable.
-	echo -e "${RED} Today is: ${STD}" $DT
+# Insatll ScrCpy
+	sudo apt update
+	sudo apt install scrcpy
+	
 }
 
 # ================== Main Menu ====================
