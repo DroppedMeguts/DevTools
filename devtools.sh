@@ -14,6 +14,7 @@
 REPO="git clone https://darboo@bitbucket.org/darboo/development-management-tool.git"
 clear
 SAI="sudo apt install -y "
+FetchIP=$(ip a | grep)
 
 # Options to change the printed text colour
 STD='\033[0;0;39m'
@@ -28,6 +29,17 @@ InstallWireGuard(){
 	$SAI wireguard-tools xclip scrcpy
 }
 
+AddPeer(){
+# Add the required Peer details
+	#sudo nano /etc/wireguard/wg0.conf
+# View adaptors with assigned IP 
+	ip a 
+	read -p " Please provide the Network Adaptor: " NetworkAdaptor
+	read -p " Please provide the WireGuard Peer Key: " WireGuardPeerKey
+	read -p " Please provide the Peers IP: " PeerIP
+	sudo wg set $NetworkAdaptor peer $WireGuardPeerKey allowed-ips $PeerIP
+}
+
 setupssh(){
 # Setup SSH on this machine and display created key.
 	echo "Create SSH key"
@@ -37,12 +49,8 @@ setupssh(){
 
 ShowSSHKey(){
 # Display SSH Key and copy to clipboard
+	lastmessage=$(cat ~/.ssh/id_rsa.pub)
 	cat ~/.ssh/id_rsa.pub | xclip -sel clip	
-}
-
-GenKey(){
-# Generate a private key
-	sudo wg genkey
 }
 
 DMTcommit(){
@@ -66,8 +74,8 @@ show_menus(){
 	echo "-----------------------------------"
 	echo "0.  "
 	echo "1.  Generate Private Key"
-	echo "2.  "
-	echo "3.  "
+	echo "2.  Generate & Display the new Pre Shared Key"
+	echo "3.  Add a new Peer"
 	echo "4.  "
 	echo "5.  "
 	echo "6.  "
@@ -91,9 +99,9 @@ read_options(){
 # Execute selected command modules	
 	case $choice in
         0)    ;;
-		1) GenKey ;;
-		2)    ;;
-		3)   ;;
+		1) sudo wg genkey ;;
+		2) PreSharedKey=$(sudo wg genpsk) && lastmessage=$(echo -e "${RED} $PreSharedKey ${STD}") ;;
+		3) AddPeer ;;
 		4)   ;;
 		5)   ;;
 		6)   ;;
