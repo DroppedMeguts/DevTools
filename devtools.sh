@@ -6,6 +6,14 @@
 
 
 # ============ Environment Variables ============= 
+# Define this menus title.	
+	MenuTitle=" - Dev Tools - "
+# Describe what this menu does
+	Description=" Usefull development tools "
+ 
+REPO="git clone https://darboo@bitbucket.org/darboo/development-management-tool.git"
+clear
+SAI="sudo apt install -y "
 
 # Options to change the printed text colour
 STD='\033[0;0;39m'
@@ -15,16 +23,26 @@ RED='\033[0;41;30m'
 # Add your desired programme modules
 
 InstallWireGuard(){
-# Install WireGuard-Tools & ScrCpy
+# Install WireGuard-Tools, xclip & ScrCpy
 	sudo apt update
-	sudo apt install wireguard-tools
-	sudo apt install scrcpy
+	$SAI wireguard-tools xclip scrcpy
+}
+
+setupssh(){
+# Setup SSH on this machine and display created key.
+	echo "Create SSH key"
+	ssh-keygen
+ 	ShowSSHKey
+}
+
+ShowSSHKey(){
+# Display SSH Key and copy to clipboard
+	cat ~/.ssh/id_rsa.pub | xclip -sel clip	
 }
 
 GenKey(){
 # Generate a private key
 	sudo wg genkey
-
 }
 
 DMTcommit(){
@@ -40,11 +58,6 @@ DMTcommit(){
 MainMenu(){
 # Clears the screen
 	clear
-# Define this menus title.	
-	MenuTitle=" - Menu Template - "
-# Describe what this menu does
-	Description=" An empty template for new menus "
-
 # Display the menu options
 show_menus(){
 	echo " "	
@@ -61,7 +74,9 @@ show_menus(){
 	echo "7.  " 
     echo "8.  "
     echo "9.  "
-	echo "10. Setup Wireguard and ScrCpy "
+	echo "11. Setup Wireguard and ScrCpy "
+ 	echo "12. Setup SSH " 
+  	echo "13. Display SSH Key and copy to clipboard "
 	echo "Q.  Quit				   Exit this Menu"
 	echo " "
 	echo " $lastmessage " 
@@ -76,7 +91,7 @@ read_options(){
 # Execute selected command modules	
 	case $choice in
         0)    ;;
-		1)   GenKey ;;
+		1) GenKey ;;
 		2)    ;;
 		3)   ;;
 		4)   ;;
@@ -85,7 +100,9 @@ read_options(){
 		7)   ;;
 		8)   ;;
         9)   ;;
-        10)  InstallWireGuard ;;
+        11) InstallWireGuard ;;
+	12) setupssh ;;
+ 	13) ShowSSHKey ;;
 # Quit this menu
         q|Q) clear && echo " See you later $USER! " && exit 0;;
 # Add, Commit and Push updates
